@@ -1,0 +1,72 @@
+---
+title: "Figure Code"
+author: "Christian Pascual"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+library(glue)
+```
+
+```{r}
+path = "simulations/standard"
+d = tibble()
+files = paste0("simulations/standard/",list.files(path))
+sims = vector(mode = "list", length = length(files))
+
+for (i in 1:length(files)) {
+  t = readRDS(files[i])
+  sims[[i]] = t
+  print(i)
+}
+
+d = bind_rows(sims)
+
+saveRDS(d, "standard-sims.rds")
+```
+
+# EPP Plot
+
+```{r}
+d = readRDS("standard-sims.rds")
+
+epp = d %>% 
+  filter(EFFECT_SIZE == 0, AR1_PHI == 50) %>% 
+  select(contains("prob")) %>% 
+  pivot_longer(everything(), names_to = "col", values_to = "probability") %>% 
+  transmute(
+    probability = probability,
+    treatment = str_extract(col, "X\\d+"),
+    period = str_extract(col, "period\\d?\\d") %>% 
+      str_replace("period", "") %>% as.numeric
+  ) %>% 
+  group_by(treatment, period) %>% 
+  summarize(n = n(), EPP = mean(probability))
+
+epp %>% 
+  ggplot(aes(x = period, y = EPP, color = treatment)) + 
+  geom_line()
+```
+
+```{r}
+source_folder <- "simulations/standard-bad"
+destination_folder <- "simulations/standard"
+
+# List of files to move
+files = list.files(destination_folder)
+files_to_move <- files[str_detect(files, "null_AR75")]
+
+# Create full paths for source and destination
+source_paths <- file.path(source_folder, files_to_move)
+destination_paths <- file.path(destination_folder, files_to_move)
+
+# Copy files to the destination folder
+file.copy(from = source_paths, to = destination_paths, overwrite = TRUE)
+
+# Optionally, remove the original files (uncomment the line below if you want to delete the original files)
+# file.remove(source_paths)
+
+```
+
