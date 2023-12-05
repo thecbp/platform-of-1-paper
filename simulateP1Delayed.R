@@ -265,7 +265,7 @@ simulatePlatformOf1Delayed = function(PARAM_ARGS, MODEL_ARGS) {
     new_data = cbind(X, Y, period_col, assignment_col)
     
     # Rename this new data to make sure that columns are aligned when combining
-    colnames(new_data) = c(paste0("X", 1:PARAM_ARGS[["NUM_TRTS"]]), "Y", "period", "trt")
+    colnames(new_data) = c(paste0("X", 1:new_num_trts), "Y", "period", "trt")
     
     # Append new data to current set
     TRIAL_DATA = rbind(TRIAL_DATA, new_data)

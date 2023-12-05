@@ -23,7 +23,7 @@ source("simulateP1Standard.R")
 ################################################################################
 
 # [!!!] CHOOSE PARAMETERS: OUTPUT FOLDER
-out_path = "simulations/standard"
+out_path = "simulations/varying-periods"
 
 # Create directory if it doesn't already exist
 if (!dir.exists(out_path))
@@ -42,19 +42,19 @@ choice_num_trts = 3
 choice_num_init_cycles = 1
 
 # [!!!] Define the number of observations made during a treatment period (initialization)
-choice_num_obvs_init = 1
+choice_num_obvs_init = c(3, 7)
 
 # [!!!] Define the number of observations made during a treatment period (adaptive)
-choice_num_obvs_adaptive = 1
+choice_num_obvs_adaptive = c(3, 7)
 
 # [!!!] Define the maximum length of the trial
 choice_max_duration = 50
 
 # [!!!] Define the effect size of the effective treatment
-choice_effect_size = c(-2, -5, -10)
+choice_effect_size = c(0, -2, -5, -10)
 
 # [!!!] Define the autocorrelation of the AR(1)
-choice_ar1_phi = c(0, 25, 50, 75)
+choice_ar1_phi = c(0)
 
 # [!!!] CHOOSE PARAMETERS: NUMBER OF REPLICATIONS
 no_reps_per_scenario = 2000
@@ -163,16 +163,11 @@ scenario_grid =
       EFFECT_SIZE == -5 ~ "mod",
       EFFECT_SIZE == -10 ~ "large",
     ),
-    FILE = glue::glue("{EFFECT_SIZE_CODE}_AR{AR1_PHI}_{REP_ID}.out")
+    FILE = glue::glue("{EFFECT_SIZE_CODE}_len{NUM_OBVS_INIT}_{REP_ID}.out")
   ) %>% 
-  # filter(
-  #   # Only keep designs where the number of observations in init and adaptive are the same 
-  #   (NUM_OBVS_INIT == 3 & NUM_OBVS == 3),
-  #   (NUM_OBVS_INIT == 7 & NUM_OBVS == 7)
-  # ) %>% 
   filter(!(FILE %in% already_simulated)) 
 
-plan(multisession, workers = availableCores() - 1)
+plan(multisession, workers = availableCores())
 scenario_grid %>% 
   mutate(
     sim = future_pmap(list(REP_ID, NUM_TRTS, NUM_INIT_CYCLES, NUM_OBVS_INIT, NUM_OBVS_ADAPTIVE,

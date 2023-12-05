@@ -14,7 +14,7 @@ pkgs = c(
 
 pacman::p_load(char = pkgs)
 source("P1-helpers.R") # Loads Thompson Sampling function
-source("simulateP1Standard.R")
+source("simulateP1Delayed.R")
 
 ################################################################################
 
@@ -23,7 +23,7 @@ source("simulateP1Standard.R")
 ################################################################################
 
 # [!!!] CHOOSE PARAMETERS: OUTPUT FOLDER
-out_path = "simulations/varying-periods"
+out_path = "simulations/delayed"
 
 # Create directory if it doesn't already exist
 if (!dir.exists(out_path))
@@ -142,10 +142,10 @@ X = X[rep(seq_len(nrow(X)), each = choice_num_obvs_init),]
 X = X[rep(seq_len(nrow(X)), times = choice_num_init_cycles),]
 Y = rnorm(nrow(X))
 DATA = cbind(X, Y = Y) %>% tibble::as_tibble()
-colnames(DATA) = c(paste0("X", 1:choice_num_trts), "Y", "period", "trt")
+colnames(DATA) = c(paste0("X", 1:(choice_num_trts+1)), "Y", "period", "trt")
 
 # Build the formula for the model (X1 is reference treatment)
-FORMULA = paste0("Y ~", paste0("X", 2:choice_num_trts, collapse = "+"))
+FORMULA = paste0("Y ~", paste0("X", 2:(choice_num_trts+1), collapse = "+"))
 
 MODEL_ARGS[["COMPILED_FIT2"]] = brms::brm(formula = FORMULA,
                                          data = DATA,
@@ -190,7 +190,7 @@ scenario_grid =
       EFFECT_SIZE == -5 ~ "mod",
       EFFECT_SIZE == -10 ~ "large",
     ),
-    FILE = glue::glue("lateadd_{EFFECT_SIZE_CODE}_{REP_ID}.out")
+    FILE = glue::glue("delayed_{EFFECT_SIZE_CODE}_{REP_ID}.out")
   ) %>% 
   filter(!(FILE %in% already_simulated)) 
 
@@ -219,10 +219,7 @@ scenario_grid %>%
                           FILE = FILE_
                         )
                         
-                        simulatePlatformOf1Standard(PARAM_ARGS, MODEL_ARGS)
-                        # simulatePlatformOf1HeavyTail(PARAM_ARGS, MODEL_ARGS)
-                        # simulatePlatformOf1LateAddition(PARAM_ARGS, MODEL_ARGS)
-                        # simulatePlatformOf1ARSensitivity(PARAM_ARGS, MODEL_ARGS)
+                        simulatePlatformOf1Delayed(PARAM_ARGS, MODEL_ARGS)
                         
                       }
     ))
