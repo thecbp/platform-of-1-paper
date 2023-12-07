@@ -51,7 +51,7 @@ choice_num_obvs_adaptive = 1
 choice_max_duration = 50
 
 # [!!!] Define the effect size of the effective treatment
-choice_effect_size = c(0, -2, -5, -10)
+choice_effect_size = c(-2, -5, -10)
 
 # [!!!] Define the autocorrelation of the AR(1)
 choice_ar1_phi = c(0)
