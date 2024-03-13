@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+/simulations
+/code
+/hidden
+/plots
+/compiled-simulation-data
