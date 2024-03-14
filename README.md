@@ -16,4 +16,22 @@ To use `simulation-pipeline.R`, a user will need to do the following:
 3. Define the parameters for Thompson Sampling, MCMC and interim decisions
 4. Run the simulations
 
+The code is designed to output the results of each individual simulation into a pre-specified directory. The simulations can be compiled together into a single tibble using the `compileSimulations()` function in the `helpers.R` script. 
+
+```
+source("helpers.R")
+
+# assuming that the simulations are stored in "simulations/test"
+out = compileSimulations("simulations/test")
+```
+
+We recommend using the scripts if you plan to run > 1000 simulations. This takes advantage of parallelization and speeds up the process.
+
 # How to use: Shiny dashboard
+
+We have provided a Shiny dashboard for running small scale simulations. The R code for the app is located in the `app` directory. After downloading this repo to your local machine, you can run the app with the following command:
+
+```
+library(shiny)
+runApp("app")
+```

@@ -65,3 +65,20 @@ rebalance_probabilities = function(probs, current, start) {
   
   return(probs[-futile_arm] + deltas)
 }
+
+compileSimulations = function(path) {
+  
+  # List all files in the given directory
+  files = paste0(path,list.files(path))
+  
+  # Pre-allocate list for simulations
+  sims = vector(mode = "list", length = length(files))
+  
+  for (i in 1:length(files)) {
+    t = readRDS(files[i])
+    sims[[i]] = t
+  }
+  
+  bind_rows(sims) 
+   
+}
