@@ -1,4 +1,4 @@
-simulatePlatformOf1 = function(PARAM_ARGS, MODEL_ARGS) {
+simulatePlatformOf1Shiny = function(PARAM_ARGS, MODEL_ARGS) {
   
   # Initialize output row with 
   OUT = tibble(
@@ -177,7 +177,7 @@ simulatePlatformOf1 = function(PARAM_ARGS, MODEL_ARGS) {
   OUT = bind_cols(OUT, CLIN_INTERVAL_TABLE_WIDE)
   OUT = bind_cols(OUT, ASSIGNMENTS_WIDE)
   
-  saveRDS(OUT, file = sprintf("%s/%s.rds", out_path, PARAM_ARGS[["FILE"]]))
+  saveRDS(OUT, file = sprintf("%s/%s.rds", PARAM_ARGS[["OUT_PATH"]], PARAM_ARGS[["FILE"]]))
   
   return(OUT)
   
