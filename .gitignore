@@ -3,8 +3,4 @@
 .RData
 .Ruserdata
 
-/simulations-hidden
-/code
-/hidden
-/plots
-/compiled-simulation-data
+/app/test

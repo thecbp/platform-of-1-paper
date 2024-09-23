@@ -1,31 +1,9 @@
-This repo is associated with the manuscript, "Platform-of-1: A Bayesian Adaptive N-of-1 Trial Design For Personalizing Treatment Among Multiple Candidates". It contains code for simulating data from a Platform-of-1 Trial and an accompanying Shiny dashboard for running simulations. 
+This repo is associated with the manuscript, "Platform-of-1: a Bayesian adaptive N-of-1 trial design for identifying an optimal treatment".
 
-# How to use: Scripts
+In this repo, you can find:
 
-There are 4 main files to consider:
-
-- `simulation-pipeline.R`: Main interface for users. Users can specify their their desired parameters for the Platform-of-1 design. This interface creates a grid of all the simulation repetitions and keeps track of which have been simulated. Uses furr library for parallelizing simulations. 
-- `simulatePlatformOf1.R`: contains function for running Platform-of-1 trials without interim decisions (for examining how operating characteristics evolve over course of trial)
-- `simulatePlatformOf1Decision.R`: contains function for running Platform-of-1 trials with interim decisions
-- `helpers.R`: contains functions for Thompson Sampling and probability rebalancing algorithm
-
-To use `simulation-pipeline.R`, a user will need to do the following: 
-
-1. Where to place simulation results
-2. Define the parameters for the Platform-of-1 trial
-3. Define the parameters for Thompson Sampling, MCMC and interim decisions
-4. Run the simulations
-
-The code is designed to output the results of each individual simulation into a pre-specified directory. The simulations can be compiled together into a single tibble using the `compileSimulations()` function in the `helpers.R` script. 
-
-```
-source("helpers.R")
-
-# assuming that the simulations are stored in "simulations/test"
-out = compileSimulations("simulations/test")
-```
-
-We recommend using the scripts if you plan to run > 1000 simulations. This takes advantage of parallelization and speeds up the process.
+- an accompanying Shiny dashboard for running simulations. 
+- code for simulating data from a Platform-of-1 Trial
 
 # How to use: Shiny dashboard
 
@@ -35,3 +13,26 @@ We have provided a Shiny dashboard for running small scale simulations. The R co
 library(shiny)
 runApp("app")
 ```
+
+From here, you can change a few parameters and run your simulations. They will be stored on a folder that the user can specify in the dashboard.
+
+# How to use: Scripts
+
+We have provided scripts for running more large scale simulations. Within the `R` directory, the main files of interest are:
+
+- `pipeline.R`: Script where parameters can be specified to initialize simulation
+- `simulateData.R`: contains a function that simulates a Platform-of-1 trial. This version does not act on decision rules and is paired with `pipeline.R`
+- `simulateDataDecision.R`: contains a function that simulates a Platform-of-1 trial. This version does act on decision rules.
+
+Other files in the `R` folder hold code and functionality that help with simulating trials.
+
+
+To use `pipeline.R`, a user will need to do the following: 
+
+1. Specify where to place simulations
+2. Define the parameters for the Platform-of-1 trial (observation frequency, standardized effect size, AR1 parameter)
+3. Run the simulations
+
+The code is designed to output the results of each individual simulation into a pre-specified directory. From there, they can be compiled into a single dataframe and then analyzed.
+
+We recommend using the scripts if you plan to run > 1000 simulations. Our simulation pipeline takes advantage of parallelization and speeds up the process.
